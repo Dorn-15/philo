@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adoireau <adoireau@42.fr>                  +#+  +:+       +#+        */
+/*   By: adoireau <adoireau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 17:04:31 by adoireau          #+#    #+#             */
-/*   Updated: 2025/03/24 17:04:41 by adoireau         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:54:49 by adoireau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	ft_atoi(const char *str)
 	while (str[i] >= '0' && str[i] <= '9' && result < 2147483647)
 		result = result * 10 + (str[i++] - '0');
 	if (result > 2147483647)
-		return (-1);
+		return (-2);
 	return ((int)(result * sign));
 }
 
@@ -61,31 +61,44 @@ static int	ft_isdigit(char *str)
 	return (1);
 }
 
-t_philo	init_philo(char **av)
+static t_data	init_data(char **av)
 {
 	int		i;
-	t_philo	philo;
+	t_data	data;
 
 	i = 1;
 	while (av[i])
 	{
 		if (!ft_isdigit(av[i]))
 		{
-			philo.nb_philo = -1;
-			return (philo);
+			data.nb_philo = -1;
+			return (data);
 		}
 		i++;
 	}
-	philo.nb_philo = ft_atoi(av[1]);
-	philo.time_to_die = ft_atoi(av[2]);
-	philo.time_to_eat = ft_atoi(av[3]);
-	philo.time_to_sleep = ft_atoi(av[4]);
+	data.nb_philo = ft_atoi(av[1]);
+	data.time_to_die = ft_atoi(av[2]);
+	data.time_to_eat = ft_atoi(av[3]);
+	data.time_to_sleep = ft_atoi(av[4]);
 	if (av[5])
-		philo.nb_eat = ft_atoi(av[5]);
+		data.nb_eat = ft_atoi(av[5]);
 	else
-		philo.nb_eat = -1;
-	if (philo.nb_philo < 0 || philo.time_to_die < 0
-		|| philo.time_to_eat < 0 || philo.time_to_sleep < 0 || philo.nb_eat < 0)
-		philo.nb_philo = -2;
-	return (philo);
+		data.nb_eat = -1;
+	if (data.nb_philo < 0 || data.time_to_die < 0
+		|| data.time_to_eat < 0 || data.time_to_sleep < 0 || data.nb_eat < -1)
+		data.nb_philo = -2;
+	return (data);
+}
+
+t_data	get_data(char **av)
+{
+	static t_data	data;
+	static int		initialized = 0;
+
+	if (!initialized)
+	{
+		data = init_data(av);
+		initialized = 1;
+	}
+	return (data);
 }

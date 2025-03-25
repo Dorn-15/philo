@@ -2,7 +2,7 @@ NAME		=	philo
 
 SRCS		=	philo.c \
 				error.c \
-				init.c
+				init_data.c
 
 OBJS		=	$(SRCS:.c=.o)
 
