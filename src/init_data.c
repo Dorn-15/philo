@@ -6,7 +6,7 @@
 /*   By: adoireau <adoireau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 17:04:31 by adoireau          #+#    #+#             */
-/*   Updated: 2025/04/07 12:22:49 by adoireau         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:01:36 by adoireau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,21 @@
 static int	ft_atoi(const char *str)
 {
 	int		i;
-	int		sign;
 	long	result;
 
 	i = 0;
-	sign = 1;
 	result = 0;
 	if (!str || !str[i])
 		return (0);
 	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
-	if (str[i] == '-')
-		sign = -1;
-	if (str[i] == '+' || str[i] == '-')
+	if (str[i] == '+')
 		i++;
 	while (str[i] >= '0' && str[i] <= '9' && result < 2147483647)
 		result = result * 10 + (str[i++] - '0');
 	if (result > 2147483647)
 		return (-2);
-	return ((int)(result * sign));
+	return ((int)result);
 }
 
 static int	ft_isdigit(char *str)
@@ -49,14 +45,13 @@ static int	ft_isdigit(char *str)
 		i++;
 	if (str[i] == '+')
 		i++;
-	while (str[i] && str[i] >= '0' && str[i] <= '9')
-	{
+	if (str[i] && str[i] >= '0' && str[i] <= '9')
 		bool = 1;
+	while (str[i] && str[i] >= '0' && str[i] <= '9')
 		i++;
-	}
 	while (str[i] && (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13)))
 		i++;
-	if (str[i] || bool == 0)
+	if (str[i] || !bool)
 		return (0);
 	return (1);
 }
@@ -71,7 +66,7 @@ static t_data	init_data(char **av)
 	{
 		if (!ft_isdigit(av[i]))
 		{
-			data.nb_philo = -1;
+			data.nb_philo = 0;
 			return (data);
 		}
 		i++;
@@ -86,7 +81,7 @@ static t_data	init_data(char **av)
 		data.nb_eat = -1;
 	if (data.nb_philo < 0 || data.time_to_die < 0
 		|| data.time_to_eat < 0 || data.time_to_sleep < 0 || data.nb_eat < -1)
-		data.nb_philo = -2;
+		data.nb_philo = -1;
 	return (data);
 }
 

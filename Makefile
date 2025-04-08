@@ -3,7 +3,10 @@ NAME		=	philo
 SRCS		=	src/philo.c \
 				src/error.c \
 				src/init_data.c \
-				src/utile.c
+				src/utile.c \
+				src/routine.c \
+				src/init_philo.c \
+				src/status.c
 
 OBJS		=	$(SRCS:.c=.o)
 
