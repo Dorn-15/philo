@@ -6,11 +6,11 @@
 /*   By: adoireau <adoireau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:32:37 by adoireau          #+#    #+#             */
-/*   Updated: 2025/03/26 17:06:14 by adoireau         ###   ########.fr       */
+/*   Updated: 2025/04/07 15:30:26 by adoireau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../inc/philo.h"
 
 long	ft_get_time(void)
 {
@@ -28,5 +28,9 @@ int	is_died(long last_meal, int time_to_die)
 
 void	print_status(int id, char *status)
 {
+	static pthread_mutex_t print_mutex = PTHREAD_MUTEX_INITIALIZER;
+	
+	pthread_mutex_lock(&print_mutex);
 	printf("%ld %d %s\n", ft_get_time(), id, status);
+	pthread_mutex_unlock(&print_mutex);
 }

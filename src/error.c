@@ -6,11 +6,11 @@
 /*   By: adoireau <adoireau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 17:04:49 by adoireau          #+#    #+#             */
-/*   Updated: 2025/03/26 17:06:15 by adoireau         ###   ########.fr       */
+/*   Updated: 2025/04/07 12:22:51 by adoireau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../inc/philo.h"
 
 int	bad_args(int error)
 {

@@ -1,9 +1,9 @@
 NAME		=	philo
 
-SRCS		=	philo.c \
-				error.c \
-				init_data.c \
-				utile.c
+SRCS		=	src/philo.c \
+				src/error.c \
+				src/init_data.c \
+				src/utile.c
 
 OBJS		=	$(SRCS:.c=.o)
 
