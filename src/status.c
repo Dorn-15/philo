@@ -6,7 +6,7 @@
 /*   By: adoireau <adoireau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:57:15 by adoireau          #+#    #+#             */
-/*   Updated: 2025/04/08 19:05:31 by adoireau         ###   ########.fr       */
+/*   Updated: 2025/04/09 18:16:28 by adoireau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	check_status(t_philo *philo, t_data data)
 	status = 0;
 	while (!status)
 	{
-		usleep(10000);
+		usleep(1000);
 		status = check_philos_status(philo, data.nb_philo, data.time_to_die);
 	}
 }
