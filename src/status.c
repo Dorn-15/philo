@@ -6,7 +6,7 @@
 /*   By: adoireau <adoireau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:57:15 by adoireau          #+#    #+#             */
-/*   Updated: 2025/04/09 18:16:28 by adoireau         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:44:40 by adoireau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,17 @@ static int	check_philos_status(t_philo *philo, int nb_philo, int time_to_die)
 	finished = 0;
 	while (i < nb_philo)
 	{
+		pthread_mutex_lock(get_eat_mutex(i));
 		if (is_died(philo[i].last_meal, time_to_die) && !philo[i].end_eat)
 		{
-			pthread_mutex_lock(philo[i].print_mutex);
-			*philo[i].someone_died = 1;
-			pthread_mutex_unlock(philo[i].print_mutex);
-			print_status(philo[i].id, "died",
-				philo[i].print_mutex, philo[i].someone_died);
+			pthread_mutex_unlock(get_eat_mutex(i));
+			should_die(1);
+			print_status(philo[i].id, "died");
 			return (1);
 		}
 		if (philo[i].end_eat)
 			finished++;
+		pthread_mutex_unlock(get_eat_mutex(i));
 		i++;
 	}
 	if (finished == nb_philo)
@@ -46,7 +46,7 @@ void	check_status(t_philo *philo, t_data data)
 	status = 0;
 	while (!status)
 	{
-		usleep(1000);
+		ft_usleep(5);
 		status = check_philos_status(philo, data.nb_philo, data.time_to_die);
 	}
 }

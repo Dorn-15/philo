@@ -6,56 +6,55 @@
 /*   By: adoireau <adoireau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:38:53 by adoireau          #+#    #+#             */
-/*   Updated: 2025/04/09 18:16:47 by adoireau         ###   ########.fr       */
+/*   Updated: 2025/04/10 17:19:12 by adoireau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
-// proteger les forks avec un mutex
-// utiliser valgrind --tool=helgrind --leak-check=full ./philo 5 800 200 200 10
+
 static void	join_threads(t_philo *philo, int nb_philo)
 {
 	int	i;
 
 	i = 0;
 	while (i < nb_philo)
-	{
-		pthread_join(philo[i].thread, NULL);
-		i++;
-	}
+		pthread_join(philo[i++].thread, NULL);
+	free(philo);
 }
 
-static void	destroy_mutexes(pthread_mutex_t *forks,
-	int nb_philo, pthread_mutex_t *print_mutex)
+static void	destroy_mutexes(pthread_mutex_t *forks, int nb_philo)
 {
-	int	i;
+	int				i;
+	pthread_mutex_t	*print_mutex;
+	pthread_mutex_t	*die_mutex;
+	pthread_mutex_t	*eat_mutex;
 
+	print_mutex = get_print_mutex();
+	die_mutex = get_die_mutex();
+	eat_mutex = get_eat_mutex(-1);
 	i = 0;
 	while (i < nb_philo)
-	{
-		pthread_mutex_destroy(&forks[i]);
-		i++;
-	}
+		pthread_mutex_destroy(&forks[i++]);
+	i = 0;
+	while (i < nb_philo)
+		pthread_mutex_destroy(&eat_mutex[i++]);
 	pthread_mutex_destroy(print_mutex);
+	pthread_mutex_destroy(die_mutex);
+	free(eat_mutex);
+	free(forks);
 }
 
 static void	init_philo(t_data data)
 {
 	t_philo			*philo;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	*print_mutex;
-	int				*someone_died;
 
-	if (!init_resources(&philo, &forks, &someone_died, &print_mutex))
+	if (!init_resources(&philo, &forks))
 		return ;
-	set_resources(philo, forks, someone_died, print_mutex);
+	set_resources(philo, forks);
 	check_status(philo, data);
 	join_threads(philo, data.nb_philo);
-	destroy_mutexes(forks, data.nb_philo, print_mutex);
-	free(print_mutex);
-	free(someone_died);
-	free(forks);
-	free(philo);
+	destroy_mutexes(forks, data.nb_philo);
 }
 
 int	main(int ac, char **av)
