@@ -6,7 +6,7 @@
 /*   By: adoireau <adoireau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:00:03 by adoireau          #+#    #+#             */
-/*   Updated: 2025/04/10 17:31:38 by adoireau         ###   ########.fr       */
+/*   Updated: 2025/04/11 13:01:44 by adoireau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ static int	take_forks(t_philo *philo, int id)
 	pthread_mutex_t	*first_fork;
 	pthread_mutex_t	*second_fork;
 
-	if (should_die(0))
-		return (1);
 	if (philo->id % 2 == 0 || philo->id == id)
 	{
 		first_fork = philo->left_fork;
@@ -41,8 +39,13 @@ static int	take_forks(t_philo *philo, int id)
 		first_fork = philo->right_fork;
 		second_fork = philo->left_fork;
 	}
-	if (take_fork(philo, first_fork) || take_fork(philo, second_fork))
+	if (take_fork(philo, first_fork))
 		return (1);
+	if (take_fork(philo, second_fork))
+	{
+		pthread_mutex_unlock(first_fork);
+		return (1);
+	}
 	return (0);
 }
 
@@ -62,16 +65,17 @@ static int	handle_eating(t_philo *philo, t_data *data)
 
 static int	handle_sleep_think(t_philo *philo, t_data *data)
 {
-	if (should_die(0))
-		return (1);
 	print_status(philo->id, "is sleeping");
 	ft_usleep(data->time_to_sleep);
-	if (should_die(0))
-		return (1);
 	print_status(philo->id, "is thinking");
-	if (data->nb_philo % 2 != 0 && data->time_to_sleep <= data->time_to_eat
-		&& data->nb_philo != 1)
-		ft_usleep(data->time_to_eat - data->time_to_sleep + 1);
+	if (data->nb_philo != 1)
+	{
+		if (data->nb_philo % 2 == 0 && data->time_to_sleep < data->time_to_eat)
+			ft_usleep(data->time_to_eat - data->time_to_eat);
+		else if (data->nb_philo % 2 != 0
+			&& data->time_to_sleep <= data->time_to_eat)
+			ft_usleep(data->time_to_eat - data->time_to_sleep + 1);
+	}
 	return (0);
 }
 
@@ -91,8 +95,7 @@ void	*routine(void *arg)
 	{
 		if (handle_eating(philo, &data))
 			break ;
-		if (handle_sleep_think(philo, &data))
-			break ;
+		handle_sleep_think(philo, &data);
 		if (data.nb_eat > 0)
 			philo->meals_eaten++;
 	}

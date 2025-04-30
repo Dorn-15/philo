@@ -6,7 +6,7 @@
 /*   By: adoireau <adoireau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 14:40:17 by adoireau          #+#    #+#             */
-/*   Updated: 2025/04/10 16:44:16 by adoireau         ###   ########.fr       */
+/*   Updated: 2025/04/11 13:07:18 by adoireau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,10 @@ void			check_status(t_philo *philo, t_data data);
 long			ft_get_time(void);
 void			ft_usleep(long time);
 pthread_mutex_t	*get_eat_mutex(int nb_philo);
+
 //die.c
 int				is_died(long last_meal, int time_to_die);
-int				should_die(int i);
 pthread_mutex_t	*get_die_mutex(void);
+int				should_die(int i);
 
 #endif
